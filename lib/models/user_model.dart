@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class UserModel {
@@ -6,12 +5,14 @@ class UserModel {
   final int? id;
   final String? email;
   final String? name;
+  final String? cv;
   final bool? isAdmin;
   UserModel({
     this.token,
     this.id,
     this.email,
     this.name,
+    this.cv,
     this.isAdmin,
   });
 
@@ -20,6 +21,7 @@ class UserModel {
     int? id,
     String? email,
     String? name,
+    String? cv,
     bool? isAdmin,
   }) {
     return UserModel(
@@ -27,6 +29,7 @@ class UserModel {
       id: id ?? this.id,
       email: email ?? this.email,
       name: name ?? this.name,
+      cv: cv ?? this.cv,
       isAdmin: isAdmin ?? this.isAdmin,
     );
   }
@@ -37,6 +40,7 @@ class UserModel {
       'id': id,
       'email': email,
       'name': name,
+      'cv': cv,
       'is_superuser': isAdmin,
     };
   }
@@ -47,6 +51,7 @@ class UserModel {
       id: map['id'] != null ? map['id'] as int : null,
       email: map['email'] != null ? map['email'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
+      cv: map['cv'] != null ? map['cv'] as String : null,
       isAdmin: map['is_superuser'] != null ? map['is_superuser'] as bool : null,
     );
   }
@@ -58,7 +63,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(token: $token, id: $id, email: $email, name: $name, isAdmin: $isAdmin)';
+    return 'UserModel(token: $token, id: $id, email: $email, name: $name, cv: $cv, isAdmin: $isAdmin)';
   }
 
   @override
@@ -69,6 +74,7 @@ class UserModel {
         other.id == id &&
         other.email == email &&
         other.name == name &&
+        other.cv == cv &&
         other.isAdmin == isAdmin;
   }
 
@@ -78,6 +84,7 @@ class UserModel {
         id.hashCode ^
         email.hashCode ^
         name.hashCode ^
+        cv.hashCode ^
         isAdmin.hashCode;
   }
 }

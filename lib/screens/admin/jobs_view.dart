@@ -6,6 +6,9 @@ import 'package:front/cubit/jobs/jobs_cubit.dart';
 
 import 'package:front/models/job_model.dart';
 import 'package:front/utils/helpers.dart';
+import 'package:front/widgets/dialogs/jh_create_job_dialog.dart';
+import 'package:front/widgets/jh_button.dart';
+import 'package:front/widgets/dialogs/jh_edit_job_dialog.dart';
 import 'package:front/widgets/jh_section_title.dart';
 import 'package:front/widgets/jh_table.dart';
 import 'package:front/widgets/jh_table_actions.dart';
@@ -40,8 +43,20 @@ class AdminJobsView extends HookWidget {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const JHSectionTitle(
-                    title: "Jobs List",
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const JHSectionTitle(
+                        title: "Jobs List",
+                      ),
+                      JHButton(
+                          child: const Icon(Icons.create),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) => const JHCreateJobDialog());
+                          })
+                    ],
                   ),
                   const Gap(40),
                   JHTable(
@@ -102,15 +117,34 @@ class AdminJobsView extends HookWidget {
                               Text('${jobs[i].company!.name}'),
                             ),
                             DataCell(
-                              JHTableActions(
-                                onDelete: state is JobsDeleteLoading
-                                    ? null
-                                    : () {
-                                        context
-                                            .read<JobsCubit>()
-                                            .deleteJob(jobs[i].id!);
-                                      },
-                                onEdit: () {},
+                              BlocListener<JobsCubit, JobsState>(
+                                listener: (context, state) {
+                                  if (state is JobsDeleteSuccess) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                "Job Deleted Successfuly")));
+                                  }
+                                },
+                                child: JHTableActions(
+                                  onDelete: state is JobsDeleteLoading
+                                      ? null
+                                      : () {
+                                          context
+                                              .read<JobsCubit>()
+                                              .deleteJob(jobs[i].id!);
+                                        },
+                                  onEdit: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => JHEditJobDialog(
+                                        jobId: jobs[i].id!,
+                                        jobTitle: jobs[i].title!,
+                                        jobDescription: jobs[i].description!,
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ],

@@ -6,7 +6,7 @@ import 'package:front/cubit/auth/auth_cubit.dart';
 import 'package:front/cubit/jobs/jobs_cubit.dart';
 import 'package:front/models/job_model.dart';
 import 'package:front/utils/helpers.dart';
-import 'package:front/widgets/jh_login_dialog.dart';
+import 'package:front/widgets/dialogs/jh_login_dialog.dart';
 import 'package:gap/gap.dart';
 
 class JHJobList extends HookWidget {

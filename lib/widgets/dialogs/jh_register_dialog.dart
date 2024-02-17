@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -6,7 +8,7 @@ import 'package:front/constants/app_colors.dart';
 import 'package:front/cubit/auth/auth_cubit.dart';
 import 'package:front/utils/helpers.dart';
 import 'package:front/widgets/jh_button.dart';
-import 'package:front/widgets/jh_login_dialog.dart';
+import 'package:front/widgets/dialogs/jh_login_dialog.dart';
 import 'package:gap/gap.dart';
 
 class RegisterDialog extends HookWidget {
@@ -20,6 +22,7 @@ class RegisterDialog extends HookWidget {
     final nameController = useTextEditingController();
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
+    MultipartFile? cv;
     return AlertDialog(
       title: Text(
         "Create a Free Job Harbor Account",
@@ -96,6 +99,23 @@ class RegisterDialog extends HookWidget {
                   hintText: "Password",
                 ),
               ),
+              const Gap(25),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles();
+
+                    if (result != null) {
+                      cv = MultipartFile.fromBytes(result.files.single.bytes!,
+                          filename: result.files.single.name);
+                    }
+                  },
+                  icon: const Icon(Icons.file_copy),
+                  label: const Text("Upload your CV"),
+                ),
+              ),
               const Gap(30),
               SizedBox(
                 width: double.infinity,
@@ -121,11 +141,13 @@ class RegisterDialog extends HookWidget {
                       onPressed: state is AuthLoading
                           ? null
                           : () {
-                              if (formKey.currentState!.validate()) {
+                              if (formKey.currentState!.validate() &&
+                                  cv != null) {
                                 context.read<AuthCubit>().register(
                                       name: nameController.text.trim(),
                                       email: emailController.text.trim(),
                                       password: passwordController.text.trim(),
+                                      cv: cv!,
                                     );
                               }
                             },

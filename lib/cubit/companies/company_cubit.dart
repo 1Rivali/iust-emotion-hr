@@ -25,6 +25,24 @@ class CompanyCubit extends Cubit<CompanyState> {
     }
   }
 
+  Future<void> createCompany(
+      {required String name,
+      required String type,
+      required String paymentType}) async {
+    try {
+      emit(CompanyCreateLoading());
+      await DioHelper.postDataAuth(path: "company/create/", data: {
+        "name": name,
+        "type": type,
+        "payment_type": paymentType,
+      });
+      await getCompanies();
+      emit(CompanyCreateSuccess());
+    } on DioException catch (e) {
+      emit(CompanyCreateFailure());
+    }
+  }
+
   Future<void> deleteCompany(int id) async {
     try {
       emit(CompanyDeleteLoading());
@@ -33,6 +51,25 @@ class CompanyCubit extends Cubit<CompanyState> {
       emit(CompanyDeleteSuccess());
     } on DioException catch (e) {
       emit(CompanyDeleteFailure());
+    }
+  }
+
+  Future<void> updateCompany(
+      {required int id,
+      required String name,
+      required String type,
+      required String paymentType}) async {
+    try {
+      emit(CompanyUpdateLoading());
+      await DioHelper.patchDataAuth(path: "company/$id/", data: {
+        "name": name,
+        "type": type,
+        "payment_type": paymentType,
+      });
+      await getCompanies();
+      emit(CompanyUpdateSuccess());
+    } catch (e) {
+      emit(CompanyUpdateFailure());
     }
   }
 }

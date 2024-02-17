@@ -34,10 +34,38 @@ class JobsCubit extends Cubit<JobsState> {
     }
   }
 
-  Future<void> updateJob({required String email, required String name}) async {
+  Future<void> updateJob(
+      {required int id,
+      required String description,
+      required String title}) async {
     try {
       emit(JobsUpdateLoading());
-      // await
-    } catch (e) {}
+      await DioHelper.patchDataAuth(path: "job/$id/", data: {
+        "description": description,
+        "title": title,
+      });
+      await getJobs();
+      emit(JobsUpdateSuccess());
+    } catch (e) {
+      emit(JobsUpdateFailure());
+    }
+  }
+
+  Future<void> createJob(
+      {required String title,
+      required String description,
+      required int companyId}) async {
+    try {
+      emit(JobsCreateLoading());
+      await DioHelper.postDataAuth(path: "job/create/", data: {
+        "title": title,
+        "description": description,
+        "company": companyId,
+      });
+      await getJobs();
+      emit(JobsCreateSuccess());
+    } on DioException catch (e) {
+      emit(JobsCreateFailure());
+    }
   }
 }

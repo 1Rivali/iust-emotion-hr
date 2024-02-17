@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import "package:flutter/foundation.dart";
@@ -24,7 +26,27 @@ class CallsCubit extends Cubit<CallsState> {
     }
   }
 
-  Future<void> deleteCalls(int id) async {
+  String? createdCallUrl;
+  Future<void> createCall({required int companyId, required int userId}) async {
+    const characters = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
+    Random random = Random();
+    createdCallUrl = String.fromCharCodes(Iterable.generate(
+        15, (_) => characters.codeUnitAt(random.nextInt(10))));
+
+    try {
+      emit(CallCreateLoading());
+      await DioHelper.postDataAuth(path: "call/create/", data: {
+        "url": createdCallUrl,
+        "user": userId,
+        "company": companyId,
+      });
+      emit(CallCreateSuccess());
+    } on DioException catch (e) {
+      emit(CallCreateFailure());
+    }
+  }
+
+  Future<void> deleteCall(int id) async {
     try {
       emit(CallsDeleteLoading());
       await DioHelper.deleteDataAuth(path: "call/$id/");
@@ -32,6 +54,17 @@ class CallsCubit extends Cubit<CallsState> {
       emit(CallsDeleteSuccess());
     } on DioException catch (e) {
       emit(CallsDeleteFailure());
+    }
+  }
+
+  Future<void> updateCall({required int id, required String url}) async {
+    try {
+      emit(CallsUpdateLoading());
+      await DioHelper.patchDataAuth(path: "call/$id/", data: {"url": url});
+      await getCalls();
+      emit(CallsUpdateSuccess());
+    } on DioException catch (e) {
+      emit(CallsUpdateFailure());
     }
   }
 }

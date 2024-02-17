@@ -5,6 +5,9 @@ import 'package:front/constants/app_colors.dart';
 import 'package:front/cubit/calls/calls_cubit.dart';
 import 'package:front/models/call_model.dart';
 import 'package:front/utils/helpers.dart';
+import 'package:front/widgets/dialogs/jh_create_call_dialog.dart';
+import 'package:front/widgets/dialogs/jh_edit_call_dialog.dart';
+import 'package:front/widgets/jh_button.dart';
 import 'package:front/widgets/jh_section_title.dart';
 import 'package:front/widgets/jh_table.dart';
 import 'package:front/widgets/jh_table_actions.dart';
@@ -39,8 +42,20 @@ class AdminCallsView extends HookWidget {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const JHSectionTitle(
-                    title: "Companies List",
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const JHSectionTitle(
+                        title: "Calls List",
+                      ),
+                      JHButton(
+                          child: const Icon(Icons.add),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) => const JHCreateCallDialog());
+                          })
+                    ],
                   ),
                   const Gap(40),
                   JHTable(
@@ -67,7 +82,7 @@ class AdminCallsView extends HookWidget {
                       )),
                       DataColumn(
                           label: Text(
-                        "Company Name",
+                        "Actions",
                       )),
                     ],
                     rows: [
@@ -103,9 +118,17 @@ class AdminCallsView extends HookWidget {
                                     : () {
                                         context
                                             .read<CallsCubit>()
-                                            .deleteCalls(calls[i].id!);
+                                            .deleteCall(calls[i].id!);
                                       },
-                                onEdit: () {},
+                                onEdit: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => JHEditCallDialog(
+                                      callId: calls[i].id!,
+                                      callUrl: calls[i].url!,
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ],

@@ -5,13 +5,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:front/cubit/auth/auth_cubit.dart';
 import 'package:front/cubit/calls/calls_cubit.dart';
 import 'package:front/cubit/companies/company_cubit.dart';
+import 'package:front/cubit/emotion/emotion_cubit.dart';
 import 'package:front/cubit/jobs/jobs_cubit.dart';
 import 'package:front/cubit/payments/payment_cubit.dart';
 import 'package:front/cubit/users/users_cubit.dart';
 import 'package:front/screens/admin/admin_layout.dart';
+import 'package:front/screens/video_call_screen.dart';
 import 'package:front/utils/app_theme.dart';
 import 'package:front/utils/cache_helper.dart';
 import 'package:front/utils/dio_helper.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'screens/user/user_layout.dart';
 
@@ -26,6 +29,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    // log(CacheHelper.getData(key: "token"));
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -46,14 +50,18 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => PaymentCubit(),
         ),
+        BlocProvider(
+          create: (context) => EmotionCubit(),
+        ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Job Harbor',
         debugShowCheckedModeBanner: false,
         theme: appTheme(),
         routes: {
           "/": (context) => const UserLayout(),
           "/admin": (context) => AdminLayout(),
+          "/call": (context) => ConferencePage(),
         },
       ),
     );

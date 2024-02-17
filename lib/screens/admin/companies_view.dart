@@ -5,6 +5,9 @@ import 'package:front/constants/app_colors.dart';
 import 'package:front/cubit/companies/company_cubit.dart';
 import 'package:front/models/company_model.dart';
 import 'package:front/utils/helpers.dart';
+import 'package:front/widgets/jh_button.dart';
+import 'package:front/widgets/dialogs/jh_create_company_dialog.dart';
+import 'package:front/widgets/dialogs/jh_edit_company_dialog.dart';
 import 'package:front/widgets/jh_section_title.dart';
 import 'package:front/widgets/jh_table.dart';
 import 'package:front/widgets/jh_table_actions.dart';
@@ -40,8 +43,20 @@ class AdminCompaniesView extends HookWidget {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  const JHSectionTitle(
-                    title: "Companies List",
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const JHSectionTitle(
+                        title: "Companies List",
+                      ),
+                      JHButton(
+                          child: const Icon(Icons.create),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) => const JHCreateCompanyDialog());
+                          })
+                    ],
                   ),
                   const Gap(40),
                   JHTable(
@@ -102,7 +117,6 @@ class AdminCompaniesView extends HookWidget {
                             ),
                             DataCell(
                               JHTableActions(
-                                canShow: true,
                                 onShow: () {},
                                 onDelete: state is CompanyDeleteLoading
                                     ? null
@@ -111,7 +125,17 @@ class AdminCompaniesView extends HookWidget {
                                             .read<CompanyCubit>()
                                             .deleteCompany(companies[i].id!);
                                       },
-                                onEdit: () {},
+                                onEdit: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => JHEditCompanyDialog(
+                                      companyId: companies[i].id!,
+                                      companyName: companies[i].name!,
+                                      companyType: companies[i].type!,
+                                      paymentType: companies[i].paymentType!,
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ],

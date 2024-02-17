@@ -22,3 +22,9 @@ final class JobsUpdateLoading extends JobsState {}
 final class JobsUpdateSuccess extends JobsState {}
 
 final class JobsUpdateFailure extends JobsState {}
+
+final class JobsCreateLoading extends JobsState {}
+
+final class JobsCreateSuccess extends JobsState {}
+
+final class JobsCreateFailure extends JobsState {}

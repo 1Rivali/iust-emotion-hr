@@ -16,3 +16,21 @@ final class CallsDeleteLoading extends CallsState {}
 final class CallsDeleteSuccess extends CallsState {}
 
 final class CallsDeleteFailure extends CallsState {}
+
+final class CallsUpdateLoading extends CallsState {}
+
+final class CallsUpdateSuccess extends CallsState {}
+
+final class CallsUpdateFailure extends CallsState {}
+
+final class CallCreateLoading extends CallsState {}
+
+final class CallCreateSuccess extends CallsState {}
+
+final class CallCreateFailure extends CallsState {}
+
+final class CallRoomLoading extends CallsState {}
+
+final class CallRoomSuccess extends CallsState {}
+
+final class CallRoomFailure extends CallsState {}

@@ -6,7 +6,7 @@ import 'package:front/constants/app_colors.dart';
 import 'package:front/cubit/auth/auth_cubit.dart';
 import 'package:front/utils/helpers.dart';
 import 'package:front/widgets/jh_button.dart';
-import 'package:front/widgets/jh_register_dialog.dart';
+import 'package:front/widgets/dialogs/jh_register_dialog.dart';
 import 'package:gap/gap.dart';
 
 class LoginDialog extends HookWidget {

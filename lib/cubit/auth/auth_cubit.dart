@@ -23,6 +23,8 @@ class AuthCubit extends Cubit<AuthState> {
       name = user.name;
       await CacheHelper.setString(key: "token", value: user.token!);
       await CacheHelper.setString(key: "name", value: user.name!);
+      await CacheHelper.setString(key: "userEmail", value: user.email!);
+      await CacheHelper.setString(key: "userID", value: user.id!.toString());
       await CacheHelper.setString(
           key: "isAdmin", value: user.isAdmin!.toString());
       emit(AuthSuccess(isAdmin: user.isAdmin!));
@@ -31,15 +33,18 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void register(
-      {required String name,
-      required String email,
-      required String password}) async {
+  void register({
+    required String name,
+    required String email,
+    required String password,
+    required MultipartFile cv,
+  }) async {
     try {
       emit(AuthLoading());
-      Response<dynamic>? response = await DioHelper.postData(
-          path: "auth/register/",
-          data: {"name": name, "email": email, "password": password});
+      FormData data = FormData.fromMap(
+          {"name": name, "email": email, "password": password, "cv": cv});
+      Response<dynamic>? response =
+          await DioHelper.postData(path: "auth/register/", data: data);
       UserModel user = UserModel.fromMap(response!.data);
       name = user.name!;
       await CacheHelper.setString(key: "name", value: user.name!);
